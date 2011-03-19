@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load mptt_tags %}
+
+{% block title %}{% trans "List menu" %}{% endblock %}
+
+{% block content %}
+<ul class="menus">
+    {% for m in menus %}
+        <li><a href="{% url strekmann_menu_list m.id %}">{{ m }}</a></li>
+    {% endfor %}
+</ul>
+<ol class="nested_sortable">
+    {% recursetree menu %}
+        <li id="item_{{ node.id }}"><div>{{ node.name }}</div>
+            {% if not node.is_leaf_node %}
+                <ol>
+                    {{ children }}
+                </ol>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+</ol>
+<form action="" method="post" class="uniForm">
+    {% csrf_token %}
+    <input type="hidden" name="mptt_tree" value="{}" id="mptt_tree" />
+    <input type="hidden" name="id" value="{{ id }}" />
+    <div class="buttonHolder">
+        <button type="submit" name="submit" class="primaryAction" id="submit_menu">Save</button>
+    </div>
+</form>
+{% endblock content %}
+
+{% block sidebar %}
+    <div id="new_menu_item"><a href="">add menu item</a></div>
+{% endblock sidebar %}
+
+{% block footerscript %}
+    $('ol.nested_sortable').nestedSortable({
+        disableNesting: 'no-nest',
+    	forcePlaceholderSize: true,
+    	handle: 'div',
+    	helper:	'clone',
+    	items: 'li',
+    	opacity: 0.6,
+    	placeholder: 'placeholder',
+    	tabSize: 25,
+    	tolerance: 'pointer',
+    	toleranceElement: '> div',
+    });
+    
+    $('#submit_menu').click(function(){
+        var tree = $('ol.nested_sortable').nestedSortable('toArray', {startDepthCount: 0});
+        tree = JSON.stringify(tree);
+    	$('#mptt_tree').val(tree);
+    });
+    
+    $("#new_menu_item a").click(function(){
+        $.ajax({
+            url: '{% url strekmann_menu_new tree_id %}',
+            success: function(data){
+                $("#new_menu_item").html(data);
+            }
+        });
+        return false;
+    });
+{% endblock footerscript %}
