@@ -7,12 +7,16 @@
 {% block content %}
 <ul class="menus">
     {% for m in menus %}
-        <li><a href="{% url strekmann_menu_list m.id %}">{{ m }}</a></li>
+        <li><a href="{% url strekmann_menu_list m.tree_id %}">{{ m }}</a></li>
     {% endfor %}
 </ul>
 <ol class="nested_sortable">
     {% recursetree menu %}
-        <li id="item_{{ node.id }}"><div>{{ node.name }}</div>
+        <li id="item_{{ node.id }}">
+            <div>{{ node.name }}
+                <span id="delete_item_{{ node.id }}" class="delete_item"></span>
+                <span id="new_item_{{ node.id }}" class="new_item"></span>
+            </div>
             {% if not node.is_leaf_node %}
                 <ol>
                     {{ children }}
@@ -24,7 +28,7 @@
 <form action="" method="post" class="uniForm">
     {% csrf_token %}
     <input type="hidden" name="mptt_tree" value="{}" id="mptt_tree" />
-    <input type="hidden" name="id" value="{{ id }}" />
+    <input type="hidden" name="tree_id" value="{{ tree_id }}" />
     <div class="buttonHolder">
         <button type="submit" name="submit" class="primaryAction" id="submit_menu">Save</button>
     </div>

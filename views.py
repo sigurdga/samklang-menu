@@ -1,17 +1,22 @@
-from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse, Http404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.utils import simplejson
 from django.db import connection, transaction
 
 from strekmann_menu.models import Menu
 from strekmann_menu.forms import MenuForm
 
-def list_menu(request, id):
+def list_menu(request, tree_id):
     if request.method == 'POST':
-        id = request.POST["id"]
-        menu = get_object_or_404(Menu, pk=id)
+        tree_id = request.POST['tree_id']
+
+    menu = Menu.tree.root_node(tree_id)
+    if not menu:
+        raise Http404
+    
+    if request.method == 'POST':
         try:
             # get tree from json-data
             tree = simplejson.loads(request.POST["mptt_tree"])
@@ -19,11 +24,10 @@ def list_menu(request, id):
             # format tree, remove root-item and make root-parents = id
             for node in tree:
                 if node['parent_id'] == 'root':
-                    node['parent_id'] = id
+                    node['parent_id'] = menu.id
                 if node['item_id'] == 'root':
                     tree.remove(node)
             
-            tree_id = menu.tree_id
             cursor = connection.cursor()
             qn = connection.ops.quote_name
             opts = menu._meta
@@ -49,18 +53,14 @@ def list_menu(request, id):
         except (KeyError, ValueError):
             pass
         
-        return HttpResponseRedirect(reverse("strekmann_menu_list", args=[id]))
-    else:
-        menu = get_object_or_404(Menu, pk=id)
+        return HttpResponseRedirect(reverse("strekmann_menu_list", args=[tree_id]))
         
-    tree_id = menu.tree_id
     menu = menu.get_descendants().all()
     menus = Menu.tree.root_nodes().all()
     return render_to_response('strekmann_menu/list.html', 
         {
             'menu': menu,
             'menus': menus,
-            'id': id,
             'tree_id': tree_id,
         }, 
         context_instance=RequestContext(request))
