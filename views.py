@@ -22,11 +22,15 @@ def list_menu(request, tree_id):
             tree = simplejson.loads(request.POST["mptt_tree"])
             
             # format tree, remove root-item and make root-parents = id
+            root = None
             for node in tree:
                 if node['parent_id'] == 'root':
                     node['parent_id'] = menu.id
                 if node['item_id'] == 'root':
-                    tree.remove(node)
+                    root = node
+            
+            if root:
+                tree.remove(root)
             
             cursor = connection.cursor()
             qn = connection.ops.quote_name
