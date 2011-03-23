@@ -36,7 +36,7 @@
 {% endblock content %}
 
 {% block sidebar %}
-    <div id="new_menu_item"><a href="">add menu item</a></div>
+    <div id="new_menu_item"></div>
 {% endblock sidebar %}
 
 {% block footerscript %}
@@ -59,13 +59,36 @@
     	$('#mptt_tree').val(tree);
     });
     
-    $("#new_menu_item a").click(function(){
-        $.ajax({
-            url: '{% url strekmann_menu_new tree_id %}',
-            success: function(data){
-                $("#new_menu_item").html(data);
-            }
+    // add onclick to delete-item-buttons
+    $("span.delete_item").each(function(index){
+        $(this).click(function(){
+           var id = $(this).attr('id').split('_');
+           id = id[2];
+           $.ajax({
+               url: '{% url strekmann_menu_delete tree_id %}',
+               type: 'POST',
+               data: 'node_id='+id,
+               success: function(data){
+                   location.reload();
+               }
+           });
         });
-        return false;
+    });
+    
+    // add onclick to new-item-buttons
+    $("span.new_item").each(function(index){
+        $(this).click(function(){
+            var id = $(this).attr('id').split('_');
+            id = id[2];
+            
+            $.ajax({
+                url: '{% url strekmann_menu_new tree_id %}',
+                type: 'GET',
+                data: 'parent_id='+id,
+                success: function(data){
+                    $("#new_menu_item").html(data);
+                }
+            });
+        });
     });
 {% endblock footerscript %}

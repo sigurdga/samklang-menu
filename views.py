@@ -83,9 +83,20 @@ def new_menuitem(request, tree_id):
     else:
         menu = Menu()
         menu.tree_id = tree_id
+        if request.method == 'GET' and 'parent_id' in request.GET:
+            menu.parent_id = request.GET['parent_id']
         form = MenuForm(instance=menu)
     
     return render_to_response(
         'strekmann_menu/new_item.html', 
         {'form': form, 'tree_id': tree_id}, 
         context_instance=RequestContext(request))
+        
+def delete_menuitem(request, tree_id):
+    """Delete a menu item"""
+    if request.method == 'POST' and 'node_id' in request.POST:
+        node = Menu.objects.get(pk=request.POST['node_id'], tree_id=tree_id)
+        node.delete()
+        return HttpResponse("1")
+        
+    return HttpResponse("0")
