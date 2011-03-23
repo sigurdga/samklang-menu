@@ -67,7 +67,7 @@
            $.ajax({
                url: '{% url strekmann_menu_delete tree_id %}',
                type: 'POST',
-               data: 'node_id='+id,
+               data: 'node_id='+id+'&csrfmiddlewaretoken='+$('input[name="csrfmiddlewaretoken"]').val(),
                success: function(data){
                    location.reload();
                }
