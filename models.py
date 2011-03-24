@@ -16,7 +16,6 @@ class Menu(MPTTModel):
 
     class MPTTMeta:
         pass
-        #order_insertion_by=['name']
 
     def __unicode__(self):
         return self.name

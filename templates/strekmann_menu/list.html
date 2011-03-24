@@ -7,12 +7,16 @@
 {% block content %}
 <ul class="menus">
     {% for m in menus %}
-        <li><a href="{% url strekmann_menu_list m.id %}">{{ m }}</a></li>
+        <li><a href="{% url strekmann_menu_list m.tree_id %}">{{ m }}</a></li>
     {% endfor %}
 </ul>
 <ol class="nested_sortable">
     {% recursetree menu %}
-        <li id="item_{{ node.id }}"><div>{{ node.name }}</div>
+        <li id="item_{{ node.id }}">
+            <div>{{ node.name }}
+                <span id="delete_item_{{ node.id }}" class="delete_item"></span>
+                <span id="new_item_{{ node.id }}" class="new_item"></span>
+            </div>
             {% if not node.is_leaf_node %}
                 <ol>
                     {{ children }}
@@ -24,7 +28,7 @@
 <form action="" method="post" class="uniForm">
     {% csrf_token %}
     <input type="hidden" name="mptt_tree" value="{}" id="mptt_tree" />
-    <input type="hidden" name="id" value="{{ id }}" />
+    <input type="hidden" name="tree_id" value="{{ tree_id }}" />
     <div class="buttonHolder">
         <button type="submit" name="submit" class="primaryAction" id="submit_menu">Save</button>
     </div>
@@ -32,7 +36,7 @@
 {% endblock content %}
 
 {% block sidebar %}
-    <div id="new_menu_item"><a href="">add menu item</a></div>
+    <div id="new_menu_item"></div>
 {% endblock sidebar %}
 
 {% block footerscript %}
@@ -55,13 +59,36 @@
     	$('#mptt_tree').val(tree);
     });
     
-    $("#new_menu_item a").click(function(){
-        $.ajax({
-            url: '{% url strekmann_menu_new tree_id %}',
-            success: function(data){
-                $("#new_menu_item").html(data);
-            }
+    // add onclick to delete-item-buttons
+    $("span.delete_item").each(function(index){
+        $(this).click(function(){
+           var id = $(this).attr('id').split('_');
+           id = id[2];
+           $.ajax({
+               url: '{% url strekmann_menu_delete tree_id %}',
+               type: 'POST',
+               data: 'node_id='+id+'&csrfmiddlewaretoken='+$('input[name="csrfmiddlewaretoken"]').val(),
+               success: function(data){
+                   location.reload();
+               }
+           });
         });
-        return false;
+    });
+    
+    // add onclick to new-item-buttons
+    $("span.new_item").each(function(index){
+        $(this).click(function(){
+            var id = $(this).attr('id').split('_');
+            id = id[2];
+            
+            $.ajax({
+                url: '{% url strekmann_menu_new tree_id %}',
+                type: 'GET',
+                data: 'parent_id='+id,
+                success: function(data){
+                    $("#new_menu_item").html(data);
+                }
+            });
+        });
     });
 {% endblock footerscript %}
