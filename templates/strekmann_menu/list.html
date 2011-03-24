@@ -5,17 +5,13 @@
 {% block title %}{% trans "List menu" %}{% endblock %}
 
 {% block content %}
-<ul class="menus">
-    {% for m in menus %}
-        <li><a href="{% url strekmann_menu_list m.tree_id %}">{{ m }}</a></li>
-    {% endfor %}
-</ul>
+<h1>{{ root.name }}<span title="{% trans "Add root node" %}" id="new_item_{{ root.id }}" class="new_item"></span></h1>
 <ol class="nested_sortable">
     {% recursetree menu %}
         <li id="item_{{ node.id }}">
             <div>{{ node.name }}
-                <span id="delete_item_{{ node.id }}" class="delete_item"></span>
-                <span id="new_item_{{ node.id }}" class="new_item"></span>
+                <span title="{% trans "Delete node" %}" id="delete_item_{{ node.id }}" class="delete_item"></span>
+                <span title="{% trans "Add child to node" %}" id="new_item_{{ node.id }}" class="new_item"></span>
             </div>
             {% if not node.is_leaf_node %}
                 <ol>
@@ -26,17 +22,23 @@
     {% endrecursetree %}
 </ol>
 <form action="" method="post" class="uniForm">
-    {% csrf_token %}
     <input type="hidden" name="mptt_tree" value="{}" id="mptt_tree" />
     <input type="hidden" name="tree_id" value="{{ tree_id }}" />
     <div class="buttonHolder">
-        <button type="submit" name="submit" class="primaryAction" id="submit_menu">Save</button>
+        <button type="submit" name="submit" class="primaryAction" id="submit_menu">
+            {% trans "Save" %}
+        </button>
     </div>
 </form>
 {% endblock content %}
 
 {% block sidebar %}
     <div id="new_menu_item"></div>
+    <ul class="menus">
+        {% for m in menus %}
+            <li><a href="{% url strekmann_menu_list m.tree_id %}">{{ m }}</a></li>
+        {% endfor %}
+    </ul>
 {% endblock sidebar %}
 
 {% block footerscript %}
@@ -67,7 +69,7 @@
            $.ajax({
                url: '{% url strekmann_menu_delete tree_id %}',
                type: 'POST',
-               data: 'node_id='+id+'&csrfmiddlewaretoken='+$('input[name="csrfmiddlewaretoken"]').val(),
+               data: 'node_id='+id,
                success: function(data){
                    location.reload();
                }

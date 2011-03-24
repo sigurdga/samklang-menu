@@ -12,8 +12,8 @@ def list_menu(request, tree_id):
     if request.method == 'POST':
         tree_id = request.POST['tree_id']
 
-    menu = Menu.tree.root_node(tree_id)
-    if not menu:
+    root_node = Menu.tree.root_node(tree_id)
+    if not root_node:
         raise Http404
     
     if request.method == 'POST':
@@ -25,7 +25,7 @@ def list_menu(request, tree_id):
             root = None
             for node in tree:
                 if node['parent_id'] == 'root':
-                    node['parent_id'] = menu.id
+                    node['parent_id'] = root_node.id
                 if node['item_id'] == 'root':
                     root = node
             
@@ -34,7 +34,7 @@ def list_menu(request, tree_id):
             
             cursor = connection.cursor()
             qn = connection.ops.quote_name
-            opts = menu._meta
+            opts = root_node._meta
         
             cursor.executemany("""
                 UPDATE %(table)s 
@@ -59,10 +59,12 @@ def list_menu(request, tree_id):
         
         return HttpResponseRedirect(reverse("strekmann_menu_list", args=[tree_id]))
         
-    menu = menu.get_descendants().all()
+    menu = root_node.get_descendants().all()
     menus = Menu.tree.root_nodes().all()
+    
     return render_to_response('strekmann_menu/list.html', 
         {
+            'root': root_node,
             'menu': menu,
             'menus': menus,
             'tree_id': tree_id,
