@@ -5,8 +5,8 @@ from django.shortcuts import render_to_response
 from django.utils import simplejson
 from django.db import connection, transaction
 
-from strekmann_menu.models import Menu
-from strekmann_menu.forms import MenuForm
+from s7n.menu.models import Menu
+from s7n.menu.forms import MenuForm
 
 def list_menu(request, tree_id):
     if request.method == 'POST':

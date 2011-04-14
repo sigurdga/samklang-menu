@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from strekmann_menu.views import list_menu, new_menuitem, delete_menuitem
+from s7n.menu.views import list_menu, new_menuitem, delete_menuitem
 
 urlpatterns = patterns('',
     (r'^list/(?P<tree_id>\d+)$', list_menu, {}, 'strekmann_menu_list'),

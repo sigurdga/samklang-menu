@@ -13,6 +13,7 @@ class Menu(MPTTModel):
     class Meta:
         ordering = ["name"]
         verbose_name, verbose_name_plural = "menu", "menus"
+        db_table = 's7n_menu'
 
     class MPTTMeta:
         pass

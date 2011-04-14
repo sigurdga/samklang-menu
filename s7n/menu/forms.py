@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from strekmann_menu.models import Menu
+from s7n.menu.models import Menu
 
 class MenuForm(ModelForm):
     
