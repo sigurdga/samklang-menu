@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from mptt.models import MPTTModel
 
 class Menu(MPTTModel):
@@ -7,6 +7,7 @@ class Menu(MPTTModel):
     name = models.CharField(max_length=20)
     url = models.CharField(max_length=100, db_index=True)
     user = models.ForeignKey(User)
+    group = models.ForeignKey(Group, null=True, blank=True)
     updated_date = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
 
