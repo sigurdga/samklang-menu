@@ -11,7 +11,6 @@ def make_menu(parent, user):
     return menu
 
 def html_menu(menu):
-    print menu
     return "<ul>" + "".join([ '<li><a href="%s">%s</a></li>' % (item.url, item.name) for item in menu ]) + "</ul>"
 
 @register.simple_tag
