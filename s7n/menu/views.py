@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.utils import simplejson
 from django.db import connection, transaction
+from django.conf import settings
 
 from s7n.menu.models import Menu
 from s7n.menu.forms import MenuForm
@@ -36,22 +37,41 @@ def list_menu(request, tree_id):
             qn = connection.ops.quote_name
             opts = root_node._meta
 
-            cursor.executemany("""
-                UPDATE %(table)s
-                SET %(parent)s = :parent_id,
-                    %(left)s = :left,
-                    %(right)s = :right,
-                    %(level)s = :depth
-                WHERE %(pk)s = :item_id AND %(tree_id)s = %(given_tree_id)s""" % {
-                    "table": qn(opts.db_table),
-                    'level': qn(opts.get_field(opts.level_attr).column),
-                    'left': qn(opts.get_field(opts.left_attr).column),
-                    'tree_id': qn(opts.get_field(opts.tree_id_attr).column),
-                    'right': qn(opts.get_field(opts.right_attr).column),
-                    'parent': qn(opts.get_field(opts.parent_attr).column),
-                    'pk': qn(opts.pk.column),
-                    'given_tree_id': tree_id,
-                }, tree)
+            if settings.DATABASES['default']['ENGINE'].endswith("sqlite3"):
+                cursor.executemany("""
+                    UPDATE %(table)s
+                    SET %(parent)s = :parent_id,
+                        %(left)s = :left,
+                        %(right)s = :right,
+                        %(level)s = :depth
+                    WHERE %(pk)s = :item_id AND %(tree_id)s = %(given_tree_id)s""" % {
+                        "table": qn(opts.db_table),
+                        'level': qn(opts.get_field(opts.level_attr).column),
+                        'left': qn(opts.get_field(opts.left_attr).column),
+                        'tree_id': qn(opts.get_field(opts.tree_id_attr).column),
+                        'right': qn(opts.get_field(opts.right_attr).column),
+                        'parent': qn(opts.get_field(opts.parent_attr).column),
+                        'pk': qn(opts.pk.column),
+                        'given_tree_id': tree_id,
+                    }, tree)
+            else:
+                cursor.executemany("""
+                    UPDATE %(table)s
+                    SET %(parent)s = %%(parent_id)s,
+                        %(left)s = %%(left)s,
+                        %(right)s = %%(right)s,
+                        %(level)s = %%(depth)s
+                    WHERE %(pk)s = %%(item_id)s AND %(tree_id)s = %(given_tree_id)s""" % {
+                        "table": qn(opts.db_table),
+                        'level': qn(opts.get_field(opts.level_attr).column),
+                        'left': qn(opts.get_field(opts.left_attr).column),
+                        'tree_id': qn(opts.get_field(opts.tree_id_attr).column),
+                        'right': qn(opts.get_field(opts.right_attr).column),
+                        'parent': qn(opts.get_field(opts.parent_attr).column),
+                        'pk': qn(opts.pk.column),
+                        'given_tree_id': tree_id,
+                    }, tree)
+
             transaction.commit_unless_managed()
 
         except (KeyError, ValueError):
