@@ -55,13 +55,13 @@
     	tolerance: 'pointer',
     	toleranceElement: '> div',
     });
-    
+
     $('#submit_menu').click(function(){
         var tree = $('ol.nested_sortable').nestedSortable('toArray', {startDepthCount: 0});
         tree = JSON.stringify(tree);
     	$('#mptt_tree').val(tree);
     });
-    
+
     // add onclick to delete-item-buttons
     $("span.delete_item").each(function(index){
         $(this).click(function(){
@@ -77,13 +77,13 @@
            });
         });
     });
-    
+
     // add onclick to new-item-buttons
     $("span.new_item").each(function(index){
         $(this).click(function(){
             var id = $(this).attr('id').split('_');
             id = id[2];
-            
+
             $.ajax({
                 url: '{% url strekmann_menu_new tree_id %}',
                 type: 'GET',
