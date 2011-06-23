@@ -22,6 +22,7 @@
     {% endrecursetree %}
 </ol>
 <form action="" method="post" class="uniForm">
+    {% csrf_token %}
     <input type="hidden" name="mptt_tree" value="{}" id="mptt_tree" />
     <input type="hidden" name="tree_id" value="{{ tree_id }}" />
     <div class="buttonHolder">
