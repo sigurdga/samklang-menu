@@ -15,17 +15,20 @@ def html_menu(menu):
 
 @register.simple_tag
 def menu(request):
-    site = request.site
+    if hasattr(request, 'site'):
+        site_id = request.site.id
+    else:
+        site_id = 1
     user = request.user
     path = request.path_info
     try:
-        active_link = Menu.objects.get(tree_id=site.id, url=path)
+        active_link = Menu.objects.get(tree_id=site_id, url=path)
         menu = make_menu(active_link, user)
-        while not menu: #empty?
+        while not menu and active_link.parent: #empty?
             active_link = active_link.parent
             menu = make_menu(active_link, user)
     except Menu.DoesNotExist:
-        active_link = Menu.objects.get(tree_id=site.id, url='/')
+        active_link = Menu.objects.get(tree_id=site_id, url='/')
         menu = make_menu(active_link, user)
 
     return html_menu(menu)
@@ -36,13 +39,16 @@ def breadcrumbs(request, extra=[]):
 
     You can pass extra elements using the "extra" parameter"""
 
-    site = request.site
+    if hasattr(request, 'site'):
+        site_id = request.site.id
+    else:
+        site_id = 1
     user = request.user
     path = request.path_info
     try:
-        link = Menu.objects.get(tree_id=site.id, url=path)
+        link = Menu.objects.get(tree_id=site_id, url=path)
     except Menu.DoesNotExist:
-        link = Menu.objects.get(tree_id=site.id, url='/')
+        link = Menu.objects.get(tree_id=site_id, url='/')
 
     ancestors = []
     for ancestor in link.get_ancestors():
