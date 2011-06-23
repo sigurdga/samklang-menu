@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse, Http404
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
@@ -61,8 +61,8 @@ def list_menu(request, tree_id):
 
     menu = root_node.get_descendants().all()
     menus = Menu.tree.root_nodes().all()
-    
-    return render_to_response('strekmann_menu/list.html', 
+
+    return render_to_response('menu/list.html',
         {
             'root': root_node,
             'menu': menu,
