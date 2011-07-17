@@ -14,7 +14,7 @@ def html_menu(menu):
     return "<ul>" + "".join([ '<li><a href="%s">%s</a></li>' % (item.url, item.name) for item in menu ]) + "</ul>"
 
 @register.simple_tag
-def menu(request):
+def menu(request, default_url="/"):
     if hasattr(request, 'site'):
         site_id = request.site.id
     else:
@@ -28,8 +28,11 @@ def menu(request):
             active_link = active_link.parent
             menu = make_menu(active_link, user)
     except Menu.DoesNotExist:
-        active_link = Menu.objects.get(tree_id=site_id, url='/')
+        active_link = Menu.objects.get(tree_id=site_id, url=default_url)
         menu = make_menu(active_link, user)
+        while not menu and active_link.parent:
+            active_link = active_link.parent
+            menu = make_menu(active_link, user)
 
     return html_menu(menu)
 
