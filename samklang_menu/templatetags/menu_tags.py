@@ -1,4 +1,4 @@
-from s7n.menu.models import Menu
+from samklang_menu.models import Menu
 from django import template
 
 register = template.Library()

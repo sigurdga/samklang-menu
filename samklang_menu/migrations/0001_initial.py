@@ -9,26 +9,26 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Adding model 'Menu'
-        db.create_table('s7n_menu', (
+        db.create_table('samklang_menu', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=20)),
             ('url', self.gf('django.db.models.fields.CharField')(max_length=100, db_index=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.Group'], null=True, blank=True)),
             ('updated_date', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('parent', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='children', null=True, to=orm['menu.Menu'])),
+            ('parent', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='children', null=True, to=orm['samklang_menu.Menu'])),
             ('lft', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
             ('rght', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
             ('tree_id', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
             ('level', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
         ))
-        db.send_create_signal('menu', ['Menu'])
+        db.send_create_signal('samklang_menu', ['Menu'])
 
 
     def backwards(self, orm):
         
         # Deleting model 'Menu'
-        db.delete_table('s7n_menu')
+        db.delete_table('samklang_menu')
 
 
     models = {
@@ -68,14 +68,14 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'menu.menu': {
-            'Meta': {'ordering': "['name']", 'object_name': 'Menu', 'db_table': "'s7n_menu'"},
+        'samklang_menu.menu': {
+            'Meta': {'ordering': "['name']", 'object_name': 'Menu', 'db_table': "'samklang_menu'"},
             'group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.Group']", 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'parent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'children'", 'null': 'True', 'to': "orm['menu.Menu']"}),
+            'parent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'children'", 'null': 'True', 'to': "orm['samklang_menu.Menu']"}),
             'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'updated_date': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
@@ -84,4 +84,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['menu']
+    complete_apps = ['samklang_menu']

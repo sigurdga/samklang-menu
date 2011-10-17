@@ -6,8 +6,8 @@ from django.utils import simplejson
 from django.db import connection, transaction
 from django.conf import settings
 
-from s7n.menu.models import Menu
-from s7n.menu.forms import MenuForm
+from samklang_menu.models import Menu
+from samklang_menu.forms import MenuForm
 
 def list_menu(request, tree_id):
     if request.method == 'POST':

@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from s7n.menu.models import Menu
+from samklang_menu.models import Menu
 
 class MenuForm(ModelForm):
     
