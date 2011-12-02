@@ -2,9 +2,9 @@
 {% load i18n %}
 {% load mptt_tags %}
 
-{% block title %}{% trans "List menu" %}{% endblock %}
+{% block title %}{% trans "Edit menu" %}{% endblock %}
 
-{% block content %}
+{% block main %}
 <h1>{{ root.name }}<span title="{% trans "Add root node" %}" id="new_item_{{ root.id }}" class="new_item"></span></h1>
 <ol class="nested_sortable">
     {% recursetree menu %}
@@ -22,27 +22,30 @@
     {% endrecursetree %}
 </ol>
 <form action="" method="post" class="uniForm">
-    {% csrf_token %}
-    <input type="hidden" name="mptt_tree" value="{}" id="mptt_tree" />
-    <input type="hidden" name="tree_id" value="{{ tree_id }}" />
-    <div class="buttonHolder">
-        <button type="submit" name="submit" class="primaryAction" id="submit_menu">
-            {% trans "Save" %}
-        </button>
-    </div>
+    <fieldset>
+        {% csrf_token %}
+        <input type="hidden" name="mptt_tree" value="{}" id="mptt_tree" />
+    </fieldset>
+    <button type="submit" name="submit" class="primaryAction" id="submit_menu">
+        {% trans "Save" %}
+    </button>
 </form>
-{% endblock content %}
+{% endblock main %}
 
 {% block sidebar %}
     <div id="new_menu_item"></div>
-    <ul class="menus">
-        {% for m in menus %}
-            <li><a href="{% url strekmann_menu_list m.tree_id %}">{{ m }}</a></li>
-        {% endfor %}
-    </ul>
-{% endblock sidebar %}
+    <h1>{% trans "Menu editing" %}</h1>
+    <p>{% trans "Reorder by dragging and dropping up and down, left and right. If the elements are indented, they will belong to a submenu. You can create a large structure doing this, but the best is to keep it simple. The plus and minus is used to create or delete elements. Use the topmost plus to add elements to the main menu." %}</p>
 
-{% block footerscript %}
+{% endblock %}
+
+{% block footer_include %}
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+<script src="/static/js/jquery.ui.nestedSortable.js"></script>
+<script src="/static/js/json2.js"></script>
+{% endblock footer_include %}
+
+{% block footer_js %}
     $('ol.nested_sortable').nestedSortable({
         disableNesting: 'no-nest',
     	forcePlaceholderSize: true,
@@ -68,7 +71,7 @@
            var id = $(this).attr('id').split('_');
            id = id[2];
            $.ajax({
-               url: '{% url strekmann_menu_delete tree_id %}',
+               url: '{% url menu-delete %}',
                type: 'POST',
                data: 'node_id='+id,
                success: function(data){
@@ -85,7 +88,7 @@
             id = id[2];
 
             $.ajax({
-                url: '{% url strekmann_menu_new tree_id %}',
+                url: '{% url menu-new %}',
                 type: 'GET',
                 data: 'parent_id='+id,
                 success: function(data){
@@ -94,4 +97,4 @@
             });
         });
     });
-{% endblock footerscript %}
+{% endblock footer_js %}

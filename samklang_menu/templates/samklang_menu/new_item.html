@@ -1,14 +1,14 @@
 {% load uni_form_tags %}
 {% load i18n %}
-<h2>{% trans "Add menu item" %}</h2>
-<form action="{% url strekmann_menu_new tree_id %}" method="post" class="uniForm">
+<h1>{% trans "Add menu item" %}</h1>
+<form action="{% url menu-new %}" method="post" class="uniForm">
     <fieldset class="inlineLabels">
         {% csrf_token %}
         {{ form|as_uni_form }}
     </fieldset>
     <div class="buttonHolder">
         <button type="submit" name="submit_menuitem" class="primaryAction" id="submit_new_menuitem">
-            {% trans "Submit" %}
+            {% trans "Save" %}
         </button>
     </div>
 </form>

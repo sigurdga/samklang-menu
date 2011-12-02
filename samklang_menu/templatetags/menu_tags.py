@@ -61,6 +61,9 @@ def simple_menu(request, default_url="/"):
     # find the menu closest to the active_link
     menu = submenu(active_link, request.user)
 
+    if request.path_info != "/" and active_link.url == "/":
+        active_link = None
+
     return html_menu(menu, active_link)
 
 @register.simple_tag

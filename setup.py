@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
         name='samklang-menu',
-        version="0.1.0",
+        version="0.2.0",
         author='Sigurd Gartmann',
         author_email='sigurdga-samklang@sigurdga.no',
         url='http://github.com/sigurdga/samklang-menu',
@@ -11,7 +11,7 @@ setup(
         long_description=open('README.txt').read(),
         license="AGPL",
         packages = ['samklang_menu', 'samklang_menu.templatetags', 'samklang_menu.migrations'],
-        package_data = {'samklang_menu': ['templates/samklang_menu/*.html', 'locale/*/LC_MESSAGES/django.*o']},
+        package_data = {'samklang_menu': ['templates/samklang_menu/*.html', 'static/img/*.png', 'static/js/*.js', 'locale/*/LC_MESSAGES/django.*o']},
         classifiers=[
                 "Development Status :: 3 - Alpha",
                 "License :: OSI Approved :: GNU Affero General Public License v3",

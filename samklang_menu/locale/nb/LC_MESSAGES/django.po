@@ -1,0 +1,62 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-02 03:39+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: models.py:9
+msgid "Internal url starting with / or external url starting with http"
+msgstr "Intern url som starter med / eller ekstern som starter med http"
+
+#: templates/samklang_menu/list.html:5
+msgid "Edit menu"
+msgstr "Rediger meny"
+
+#: templates/samklang_menu/list.html:8
+msgid "Add root node"
+msgstr "Legg til element i øverste nivå"
+
+#: templates/samklang_menu/list.html:13
+msgid "Delete node"
+msgstr "Slett element"
+
+#: templates/samklang_menu/list.html:14
+msgid "Add child to node"
+msgstr "Legg til element i undermeny"
+
+#: templates/samklang_menu/list.html:30
+#: templates/samklang_menu/new_item.html:11
+msgid "Save"
+msgstr "Lagre"
+
+#: templates/samklang_menu/list.html:37
+msgid "Menu editing"
+msgstr "Menyredigering"
+
+#: templates/samklang_menu/list.html:38
+msgid ""
+"Reorder by dragging and dropping up and down, left and right. If the "
+"elements are indented, they will belong to a submenu. You can create a large "
+"structure doing this, but the best is to keep it simple. The plus and minus "
+"is used to create or delete elements. Use the topmost plus to add elements "
+"to the main menu."
+msgstr ""
+"Flytt rundt på menyelementene ved å dra dem opp eller ned, til venstre eller til høyre. hvil elementene får innrykk, vil de høre til i en undermeny. Du kan lage kompliserte menystrukturer, men det er best å holde det enkelt. Pluss og minus brukes til å legge til eller slette menyelementer. Den øverste plussen brukes til å legge til elementer i på øverste nivå."
+
+#: templates/samklang_menu/new_item.html:3
+msgid "Add menu item"
+msgstr "Legg til menyinnslag"

@@ -9,12 +9,11 @@ from django.conf import settings
 from samklang_menu.models import Menu
 from samklang_menu.forms import MenuForm
 
-def list_menu(request, tree_id):
-    if request.method == 'POST':
-        tree_id = request.POST['tree_id']
+def list_menu(request):
 
+    tree_id = request.site.id
     root_node = Menu.tree.root_node(tree_id)
-    if not root_node:
+    if not root_node or not request.user.is_superuser:
         raise Http404
 
     if request.method == 'POST':
@@ -77,31 +76,31 @@ def list_menu(request, tree_id):
         except (KeyError, ValueError):
             pass
 
-        return HttpResponseRedirect(reverse("strekmann_menu_list", args=[tree_id]))
+        return HttpResponseRedirect(reverse("menu-list"))
 
     menu = root_node.get_descendants().all()
-    menus = Menu.tree.root_nodes().all()
 
-    return render_to_response('menu/list.html',
+    return render_to_response('samklang_menu/list.html',
         {
             'root': root_node,
             'menu': menu,
-            'menus': menus,
-            'tree_id': tree_id,
         },
         context_instance=RequestContext(request))
 
 
 
-def new_menuitem(request, tree_id):
+def new_menuitem(request):
     """Create a new menu item - return html for ajax injection"""
-    if request.method == 'POST':
+    tree_id = request.site.id
+    if request.method == 'POST' and request.user.is_superuser:
         form = MenuForm(request.POST)
         if form.is_valid():
             menu = form.save(commit=False)
-            menu.user = request.user
-            menu.insert_at(menu.parent, 'last-child', True)
-        return HttpResponseRedirect(reverse("strekmann_menu_list", args=[Menu.tree.root_node(tree_id).pk]))
+            if not Menu.objects.filter(tree_id=tree_id, url=menu.url):
+                menu.user = request.user
+                menu.insert_at(menu.parent, 'last-child', True)
+            #TODO: invalidate
+        return HttpResponseRedirect(reverse("menu-list"))
     else:
         menu = Menu()
         menu.tree_id = tree_id
@@ -110,13 +109,14 @@ def new_menuitem(request, tree_id):
         form = MenuForm(instance=menu)
 
     return render_to_response(
-        'strekmann_menu/new_item.html',
-        {'form': form, 'tree_id': tree_id},
+        'samklang_menu/new_item.html',
+        {'form': form},
         context_instance=RequestContext(request))
 
-def delete_menuitem(request, tree_id):
+def delete_menuitem(request):
     """Delete a menu item"""
-    if request.method == 'POST' and 'node_id' in request.POST:
+    tree_id = request.site.id
+    if request.method == 'POST' and 'node_id' in request.POST and request.user.is_superuser:
         node = Menu.objects.get(pk=request.POST['node_id'], tree_id=tree_id)
         node.delete()
         return HttpResponse("1")
