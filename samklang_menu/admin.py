@@ -1,5 +1,13 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
-from samklang_menu.models import Menu
+from samklang_menu.models import Menu, Widget
 
-admin.site.register(Menu, MPTTModelAdmin)
+
+class WidgetInline(admin.TabularInline):
+    model = Widget
+
+
+class MenuAdmin(MPTTModelAdmin):
+    inlines = [ WidgetInline ]
+
+admin.site.register(Menu, MenuAdmin)
