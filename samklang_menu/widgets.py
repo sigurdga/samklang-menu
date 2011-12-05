@@ -7,7 +7,7 @@ class Widget(object):
     def get_display_name(self):
         raise NotImplementedError
 
-    def render(self):
+    def render(self, request):
         raise NotImplementedError
 
     def render_option_form(self):

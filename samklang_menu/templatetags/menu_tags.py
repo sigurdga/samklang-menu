@@ -66,4 +66,4 @@ def breadcrumbs(request, extra=[]):
 
 @register.simple_tag
 def widgets(request, name):
-    return "".join([ widget.widget().render() for widget in request.active.widgets.all() ])
+    return "".join([ widget.widget().render(request) for widget in request.active.widgets.all() ])
