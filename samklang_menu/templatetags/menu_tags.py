@@ -28,7 +28,10 @@ def simple_menu(request, default_url="/"):
     active_link = Menu.find_active(site, request.path_info)
 
     # find the menu closest to the active_link
-    menu = active_link.submenu(request.user)
+    if active_link:
+        menu = active_link.submenu(request.user)
+    else:
+        menu = Menu.objects.get(tree_id=site.id, url="/").submenu(request.user)
 
     return html_menu(menu, active_link)
 
@@ -66,4 +69,7 @@ def breadcrumbs(request, extra=[]):
 
 @register.simple_tag
 def widgets(request, name):
-    return "".join([ widget.widget().render(request) for widget in request.active.widgets.all() ])
+    if request.active:
+        return "".join([ widget.widget().render(request) for widget in request.active.widgets.all() ])
+    else:
+        return ""
