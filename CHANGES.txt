@@ -1,2 +1,3 @@
+v0.3.0, 2011-12-11 -- Make page widgets attachable to all linkable pages.
 v0.2.0, 2011-12-02 -- Tries harder to find active link. Added some tests. Menu management now possible. Plus small updates to unify Samklang.
 v0.1.0, 2011-10-17 -- Initial release.
