@@ -100,7 +100,7 @@ class Widget(models.Model):
         widget_class = getattr(imp, widget_name)
         try:
             options = simplejson.loads(self.options)
-        except simplejson.JSONDecodeError:
+        except:
             options = {}
         widget = widget_class(options)
         return widget
