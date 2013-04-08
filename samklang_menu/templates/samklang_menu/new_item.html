@@ -1,7 +1,7 @@
 {% load uni_form_tags %}
 {% load i18n %}
 <h1>{% trans "Add menu item" %}</h1>
-<form action="{% url menu-new %}" method="post" class="uniForm">
+<form action="{% url 'menu-new' %}" method="post" class="uniForm">
     <fieldset class="inlineLabels">
         {% csrf_token %}
         {{ form|as_uni_form }}

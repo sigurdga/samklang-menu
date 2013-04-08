@@ -1,3 +1,4 @@
+v0.4.0, 2013-04-08 -- Django 1.5 new url templatetag syntax
 v0.3.2, 2011-12-22 -- Remove datamigration for widget migration, fix json error handling, filter widgets.
 v0.3.1, 2011-12-14 -- Setup file adjusted to page widgets removal.
 v0.3.0, 2011-12-11 -- Make page widgets attachable to all linkable pages.

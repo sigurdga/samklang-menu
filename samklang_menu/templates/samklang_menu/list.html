@@ -71,7 +71,7 @@
            var id = $(this).attr('id').split('_');
            id = id[2];
            $.ajax({
-               url: '{% url menu-delete %}',
+               url: '{% url 'menu-delete' %}',
                type: 'POST',
                data: 'node_id='+id,
                success: function(data){
@@ -88,7 +88,7 @@
             id = id[2];
 
             $.ajax({
-                url: '{% url menu-new %}',
+                url: '{% url 'menu-new' %}',
                 type: 'GET',
                 data: 'parent_id='+id,
                 success: function(data){
