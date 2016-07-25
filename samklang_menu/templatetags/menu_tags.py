@@ -16,9 +16,8 @@ def html_menu(menu, active_link=None):
     return "<ul>" + "".join(menu_contents) + "</ul>"
 
 
-@register.simple_tag(takes_context=True)
-def simple_menu(context):
-    request = context['request']
+@register.simple_tag
+def simple_menu(request, default_url="/"):
 
     if hasattr(request, 'site'):
         site = request.site
