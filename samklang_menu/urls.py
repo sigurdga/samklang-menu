@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from samklang_menu.views import list_menu, new_menuitem, delete_menuitem
 
 urlpatterns = patterns('',

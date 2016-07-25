@@ -12,7 +12,7 @@ from samklang_menu.forms import MenuForm
 def list_menu(request):
 
     tree_id = request.site.id
-    root_node = Menu.tree.root_node(tree_id)
+    root_node = Menu.objects.root_node(tree_id)
     if not root_node or not request.user.is_superuser:
         raise Http404
 

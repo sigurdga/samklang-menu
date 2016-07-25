@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User, Group
 from django.utils.translation import ugettext_lazy as _
 from django.utils import simplejson
-from mptt.models import MPTTModel
+from mptt.models import MPTTModel, TreeForeignKey
 
 class Menu(MPTTModel):
     """MPTT tree menu"""
@@ -11,7 +11,7 @@ class Menu(MPTTModel):
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group, null=True, blank=True)
     updated_date = models.DateTimeField(auto_now=True)
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
     class Meta:
         ordering = ["name"]
@@ -19,7 +19,7 @@ class Menu(MPTTModel):
         db_table = 'samklang_menu'
 
     class MPTTMeta:
-        pass
+        order_insertion_by = ["name"]
 
     def __unicode__(self):
         return self.name
